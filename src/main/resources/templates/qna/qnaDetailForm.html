@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragment/mainDetail::main(
+        ~{::title},
+        _,
+        ~{},
+        ~{::link},
+         ~{::script},
+        _,
+        _,
+        ~{::.form},
+        _
+      )}">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글보기</title>
+  <link rel="stylesheet" href="" th:href="@{/css/qna/qnaDetailForm.css}">
+  <script defer th:src="@{/js/common/ckeditor.js}"></script>
+  <script defer src="" th:src="@{/js/qna/qnaDetailForm.js}"></script>
+  <script src="https://kit.fontawesome.com/4ee0f83e5d.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="form">
+  <div class="wrap" th:data-page="${fc.rc.reqPage}">
+    <div class="class-body">
+      <form action="" method="post" th:object="${qnaDetailForm}" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{qNum}">
+        <div class="qna-title">
+          <div>게시글></div>
+          <h3>[[*{qTitle}]]</h3>
+          <div>
+            <span class="qna-info qna-nickname" th:text="*{qNickname}"></span>
+            <sapn class="qna-info qna-qudate" th:text="|작성일 *{qUDate}|"></sapn>
+            <span class="qna-info qna-nhit" th:text="|조회수 *{qHit}|"></span>
+          </div>
+        </div>
+        <hr>
+
+<!--        <br>-->
+
+        <!--게시글 본문-->
+        <div class="qna-content">
+          <div><textarea name="" id="" rows="10" class="w100" th:field="*{qContent}" th:readonly="readonly"></textarea></div>
+        </div>
+<!--        <br>-->
+
+          <!-- 파일첨부-->
+        <div class="qna-file">
+          <input type="checkbox" id="checkbox">
+          <div id="accordion"><label for="checkbox"><i class="fa-solid fa-angle-down"></i>파일첨부</label></div>
+          <div id="accordion-item">
+            <div th:each="file : ${attachFiles}">
+              <a href="" th:href="@{|/attach/down/${file.fnum}|}" th:text="${file.upload_filename}"></a>
+              <th:block th:if="${#strings.contains(file.ftype,'image')}" >
+                <img th:src="@{|/attach/view/${file.fnum}|}" th:width="30px" th:height="30px">
+              </th:block>
+            </div>
+          </div>
+        </div>
+        <!-- 버튼-->
+        <div class="qna-button">
+          <th:block th:if="*{qIndent} == 0 and *{qStatus} == Q">
+            <button type="button" id="replyBtn" th:block th:if="${s_email == 'admin@test.com'}">답글</button>
+            <button type="button" id="editBtn" th:block th:if="*{qNickname} eq ${s_nickname} or ${s_email == 'admin@test.com'}" >수정</button>
+            <button type="button" id="delBtn"  th:block th:if="*{qNickname} eq ${s_nickname} or ${s_email == 'admin@test.com'}">삭제</button>
+          </th:block>
+          <!-------------------------------------------->
+          <button type="button" id="listBtn">목록</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
